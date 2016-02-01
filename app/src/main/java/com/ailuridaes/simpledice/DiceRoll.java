@@ -4,9 +4,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.github.tbouron.shakedetector.library.ShakeDetector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +19,7 @@ import java.util.Random;
 
 public class DiceRoll extends AppCompatActivity {
     private Random m_rand;
-    private ArrayList<ImageView> diceImages = new ArrayList<>();
+    private ArrayList<ImageView> diceViews = new ArrayList<>();
     private static Map<String, Integer> images = new HashMap<String, Integer>(20);
 
     static {
@@ -34,23 +38,45 @@ public class DiceRoll extends AppCompatActivity {
 
         m_rand = new Random(System.currentTimeMillis());
 
-        diceImages.add((ImageView) findViewById(R.id.dice1_img));
-        diceImages.add((ImageView) findViewById(R.id.dice2_img));
-        diceImages.add((ImageView) findViewById(R.id.dice3_img));
-        diceImages.add((ImageView) findViewById(R.id.dice4_img));
-        diceImages.add((ImageView) findViewById(R.id.dice5_img));
-        diceImages.add((ImageView) findViewById(R.id.dice6_img));
+        diceViews.add((ImageView) findViewById(R.id.dice1_img));
+        diceViews.add((ImageView) findViewById(R.id.dice2_img));
+        diceViews.add((ImageView) findViewById(R.id.dice3_img));
+        diceViews.add((ImageView) findViewById(R.id.dice4_img));
+        diceViews.add((ImageView) findViewById(R.id.dice5_img));
+        diceViews.add((ImageView) findViewById(R.id.dice6_img));
 
 
         LinearLayout diceLayout = (LinearLayout) findViewById(R.id.dice_roll_ll);
-        diceLayout.setOnClickListener(new View.OnClickListener() {
+        diceLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                for (ImageView d : diceImages) {
-                    rollDie(d);
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // check if in center of screen
+                    int vWidth = v.getWidth();
+                    int vHeight = v.getHeight();
+                    if (event.getX() < vWidth / 4 || event.getX() > vWidth * 3/4) {
+                        return false;
+                    } else if (event.getY() < vHeight / 3 || event.getY() > vHeight * 2 / 3) {
+                        return false;
+                    } else {
+                        rollDice();
+                        return true;
+                    }
+                } else {
+                    return false;
                 }
             }
         });
+
+        ShakeDetector.create(this, new ShakeDetector.OnShakeListener() {
+            @Override
+            public void OnShake() {
+                rollDice();
+            }
+        });
+
+        ShakeDetector.updateConfiguration(1.75f, 3);
+
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -73,12 +99,32 @@ public class DiceRoll extends AppCompatActivity {
         return result;
     }
 
+    private int rollDice() {
+        int total = 0;
+        for (ImageView d : diceViews) {
+            total += rollDie(d);
+        }
+        return total;
+    }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ShakeDetector.start();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ShakeDetector.stop();
+    }
 
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ShakeDetector.destroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
