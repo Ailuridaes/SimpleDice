@@ -1,14 +1,18 @@
 package com.ailuridaes.simpledice;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnClosedListener;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 
@@ -17,10 +21,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class DiceRoll extends AppCompatActivity {
+public class DiceRoll extends SlidingFragmentActivity {
     private Random m_rand;
     private ArrayList<ImageView> diceViews = new ArrayList<>();
     private static Map<String, Integer> images = new HashMap<String, Integer>(20);
+    private SettingsFragment mLogFragRight;
+    private SettingsFragment mLogFragLeft;
 
     static {
         images.put("dice_white_1", R.drawable.dice_white_1);
@@ -32,7 +38,7 @@ public class DiceRoll extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dice_roll);
 
@@ -54,7 +60,7 @@ public class DiceRoll extends AppCompatActivity {
                     // check if in center of screen
                     int vWidth = v.getWidth();
                     int vHeight = v.getHeight();
-                    if (event.getX() < vWidth / 4 || event.getX() > vWidth * 3/4) {
+                    if (event.getX() < vWidth / 4 || event.getX() > vWidth * 3 / 4) {
                         return false;
                     } else if (event.getY() < vHeight / 3 || event.getY() > vHeight * 2 / 3) {
                         return false;
@@ -77,16 +83,10 @@ public class DiceRoll extends AppCompatActivity {
 
         ShakeDetector.updateConfiguration(1.75f, 3);
 
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
+        // Make sliding menu fragments
+        setBehindContentView(R.layout.sliding_menu_frame);
+        getSlidingMenu().setSecondaryMenu(R.layout.sliding_menu_frame2);
+        createSlidingMenus();
     }
 
     private int rollDie(ImageView diceView) {
@@ -105,6 +105,97 @@ public class DiceRoll extends AppCompatActivity {
             total += rollDie(d);
         }
         return total;
+    }
+
+    /**
+     * Create the sliding menus for this activity. If savedInstanceState is not
+     * null, the menu fragment can simply be retrieved from the fragment
+     * manager.
+     *
+     * //@param savedInstanceState
+     *            If the activity is being re-initialized after previously being
+     *            shut down then this Bundle contains the data it most recently
+     *            supplied in onSaveInstanceState(Bundle). Note: Otherwise it is
+     *            null.
+     */
+    private void createSlidingMenus() {
+        SlidingMenu menu = getSlidingMenu();
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        menu.setFadeDegree(0.35f);
+        menu.setMenu(R.layout.sliding_menu_frame);
+        menu.setMode(SlidingMenu.LEFT_RIGHT);
+        menu.setBehindOffsetRes(R.dimen.sliding_menu_offset);
+        /*
+        menu.setShadowDrawable(R.drawable.sliding_menu_shadow);
+        menu.setShadowWidthRes(R.dimen.sliding_menu_shadow_width);
+        menu.setSecondaryShadowDrawable(R.drawable.sliding_menu_shadow_right);
+        */
+        menu.setOnClosedListener(new OnClosedListener() {
+            @Override
+            public void onClosed() {
+                closeOptions();
+            }
+        });
+
+        Fragment optionsLeft = getFragmentManager().findFragmentByTag(
+                "LEFT_OPTIONS");
+        Fragment optionsRight = getFragmentManager().findFragmentByTag(
+                "RIGHT_OPTIONS");
+        mLogFragRight = (SettingsFragment) getFragmentManager()
+                .findFragmentByTag("RIGHT");
+        mLogFragLeft = (SettingsFragment) getFragmentManager()
+                .findFragmentByTag("LEFT");
+
+        FragmentTransaction ft;
+
+        // Only create new fragments if they don't exist
+        if (mLogFragRight == null || mLogFragLeft == null) {
+            mLogFragRight = new SettingsFragment();
+            mLogFragLeft = new SettingsFragment();
+            ft = getFragmentManager().beginTransaction();
+            ft = ft.replace(R.id.sliding_menu_frame2, mLogFragRight, "RIGHT");
+            ft = ft.replace(R.id.sliding_menu_frame, mLogFragLeft, "LEFT");
+            ft.commit();
+        }
+
+        ft = getFragmentManager().beginTransaction();
+
+        // Restore the options fragments if they exist
+        if (optionsRight != null) {
+            ft = ft.replace(R.id.sliding_menu_frame2, optionsRight,
+                    "RIGHT_OPTIONS");
+        }
+
+        if (optionsLeft != null) {
+            ft = ft.replace(R.id.sliding_menu_frame, optionsLeft,
+                    "LEFT_OPTIONS");
+        }
+
+        // If there are any changes to be done, commit them
+        if (!ft.isEmpty()) {
+            ft.commit();
+        }
+
+        getFragmentManager().executePendingTransactions();
+
+    }
+
+    private boolean closeOptions() {
+        FragmentManager fml = mLogFragLeft.getFragmentManager();
+        FragmentManager fmr = mLogFragRight.getFragmentManager();
+
+        // Check if settings are showing, if they are just pop it off
+        if (fmr != null
+                && mLogFragRight.getFragmentManager().getBackStackEntryCount() > 0) {
+            mLogFragRight.getFragmentManager().popBackStack();
+            return true;
+        }
+        if (fml != null
+                && mLogFragLeft.getFragmentManager().getBackStackEntryCount() > 0) {
+            mLogFragLeft.getFragmentManager().popBackStack();
+            return true;
+        }
+        return false;
     }
 
 

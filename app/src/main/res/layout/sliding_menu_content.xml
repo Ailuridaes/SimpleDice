@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".SettingsFragment"
+    tools:showIn="@layout/sliding_menu_frame">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/settings_text_padding"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/settings_number_dice_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingTop="@dimen/settings_numpicker_size"
+            android:paddingBottom="@dimen/settings_numpicker_size"
+            android:paddingRight="@dimen/settings_text_padding"
+            android:paddingLeft="@dimen/settings_text_padding"
+            android:text="@string/settings_number_dice"
+            android:textSize="@dimen/settings_text_size"/>
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@id/settings_number_dice_text"
+            android:layout_toRightOf="@id/settings_number_dice_text"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>
