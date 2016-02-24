@@ -3,7 +3,11 @@ package com.ailuridaes.simpledice;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.*;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -21,8 +25,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class DiceRoll extends SlidingFragmentActivity {
+public class DiceRoll extends SlidingFragmentActivity implements
+OnSharedPreferenceChangeListener {
     private Random m_rand;
+    private SharedPreferences mPrefs;
+    private int mNumDice;
     private ArrayList<ImageView> diceViews = new ArrayList<>();
     private static Map<String, Integer> images = new HashMap<String, Integer>(20);
     private SettingsFragment mLogFragRight;
@@ -40,6 +47,7 @@ public class DiceRoll extends SlidingFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setupPreferences();
         setContentView(R.layout.dice_roll);
 
         m_rand = new Random(System.currentTimeMillis());
@@ -50,7 +58,10 @@ public class DiceRoll extends SlidingFragmentActivity {
         diceViews.add((ImageView) findViewById(R.id.dice4_img));
         diceViews.add((ImageView) findViewById(R.id.dice5_img));
         diceViews.add((ImageView) findViewById(R.id.dice6_img));
+        diceViews.add((ImageView) findViewById(R.id.dice7_img));
+        diceViews.add((ImageView) findViewById(R.id.dice8_img));
 
+        setNumberDice(mPrefs.getInt(getString(R.string.key_number_dice), R.integer.default_number_dice));
 
         LinearLayout diceLayout = (LinearLayout) findViewById(R.id.dice_roll_ll);
         diceLayout.setOnTouchListener(new View.OnTouchListener() {
@@ -101,10 +112,58 @@ public class DiceRoll extends SlidingFragmentActivity {
 
     private int rollDice() {
         int total = 0;
-        for (ImageView d : diceViews) {
-            total += rollDie(d);
+        //TODO: Change to iterate through VISIBLE dice
+        for (int i=0; i<mNumDice; i++) {
+            total += rollDie(diceViews.get(i));
         }
         return total;
+    }
+
+    private void setNumberDice(int numDice) {
+        for (int i=0; i<numDice; i++) {
+            ((View)diceViews.get(i).getParent()).setVisibility(View.VISIBLE);
+        }
+        for (int i=numDice; i<diceViews.size(); i++){
+            ((View)diceViews.get(i).getParent()).setVisibility(View.GONE);
+            if (i%2==0) {
+                ((View)diceViews.get(i).getParent().getParent()).setVisibility(View.GONE);
+            }
+        }
+        mNumDice = numDice;
+    }
+
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key == getString(R.string.settings_number_dice)) {
+            setNumberDice(mPrefs.getInt(key, getResources()
+                    .getInteger(R.integer.default_number_dice)));
+        }
+
+        this.recreate();
+    }
+
+    private void setupPreferences() {
+        mPrefs = getPreferences(Context.MODE_PRIVATE);
+
+        // Fill SharedPreferences with default information if they don't exist
+        if (mPrefs.getAll().size() == 0) {
+            SharedPreferences.Editor edit = mPrefs.edit();
+
+            edit.putInt(getString(R.string.key_number_dice), getResources()
+                    .getInteger(R.integer.default_number_dice));
+
+            edit.commit();
+        }
+    }
+
+    /**
+     * Get the SharedPreferences of this Activity.
+     *
+     * @return SharedPreferences object associated with this Activity.
+     */
+    public SharedPreferences getPrefs() {
+        return mPrefs;
     }
 
     /**
@@ -198,11 +257,11 @@ public class DiceRoll extends SlidingFragmentActivity {
         return false;
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
         ShakeDetector.start();
+        mPrefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -238,4 +297,5 @@ public class DiceRoll extends SlidingFragmentActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

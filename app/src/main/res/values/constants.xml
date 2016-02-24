@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Default Preference Values -->
+    <integer name="default_number_dice">6</integer>
+
+    <!-- Number Picker Values -->
+    <integer name="settings_number_dice_min">1</integer>
+    <integer name="settings_number_dice_max">8</integer>
+
+</resources>

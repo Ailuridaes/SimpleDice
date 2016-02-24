@@ -9,6 +9,6 @@
     <!-- Settings Dimensions -->
     <dimen name="settings_text_size">16sp</dimen>
     <dimen name="settings_text_padding">18dp</dimen>
-    <dimen name="settings_numpicker_size">26dp</dimen>
+    <dimen name="settings_numpicker_size">50dp</dimen>
     <dimen name="sliding_menu_offset">58dp</dimen>
 </resources>

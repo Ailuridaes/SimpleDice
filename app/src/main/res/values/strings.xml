@@ -2,5 +2,12 @@
     <string name="app_name">Simple Dice</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Settings Strings -->
     <string name="settings_number_dice">Number of dice:</string>
+
+    <!-- Shared Preference Keys -->
+    <string name="key_number_dice">number_dice</string>
+
+
 </resources>
