@@ -13,43 +13,7 @@
     android:background="@color/diceroll_background_color">
 
     <LinearLayout
-        android:id="@+id/dice23"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-        <RelativeLayout
-            android:id="@+id/dice2"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/dice2_img"
-                android:src="@drawable/dice_white_2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_margin="@dimen/dice_margin"
-                 />
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/dice3"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/dice3_img"
-                android:src="@drawable/dice_white_3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_margin="@dimen/dice_margin"
-                />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/dice14"
+        android:id="@+id/dice12"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -62,6 +26,42 @@
             <ImageView
                 android:id="@+id/dice1_img"
                 android:src="@drawable/dice_white_1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_margin="@dimen/dice_margin"
+                 />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/dice2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/dice2_img"
+                android:src="@drawable/dice_white_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_margin="@dimen/dice_margin"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dice34"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:id="@+id/dice3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/dice3_img"
+                android:src="@drawable/dice_white_3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
@@ -125,13 +125,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:orientation="horizontal">
         <RelativeLayout
             android:id="@+id/dice7"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:visibility="gone"
             android:layout_weight="1">
             <ImageView
                 android:id="@+id/dice7_img"
@@ -146,7 +144,6 @@
             android:id="@+id/dice8"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:visibility="gone"
             android:layout_weight="1">
             <ImageView
                 android:id="@+id/dice8_img"

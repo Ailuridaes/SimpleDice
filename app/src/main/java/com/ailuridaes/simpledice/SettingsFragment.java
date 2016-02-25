@@ -28,10 +28,12 @@ public class SettingsFragment extends Fragment {
         // Setup numberPicker
         numDicePicker = (NumberPicker) getView().findViewById(
                 R.id.settings_number_dice_picker);
-        numDicePicker.setValue(mPrefs.getInt(getString(R.string.key_number_dice), getResources()
-                .getInteger(R.integer.default_number_dice)));
         numDicePicker.setMinValue(getResources().getInteger(R.integer.settings_number_dice_min));
         numDicePicker.setMaxValue(getResources().getInteger(R.integer.settings_number_dice_max));
+        numDicePicker.setWrapSelectorWheel(false);
+        numDicePicker.setValue(mPrefs.getInt(getString(R.string.key_number_dice), getResources()
+                .getInteger(R.integer.default_number_dice)));
+
 
         numDicePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -41,6 +43,19 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+
+        /*
+        numDicePicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
+            @Override
+            public void onScrollStateChange(NumberPicker view, int scrollState) {
+
+                if(scrollState== NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+                    mPrefs.edit().putInt(getString(R.string.key_number_dice), view.getValue())
+                            .apply();
+                }
+            }
+        });
+        */
 
     }
 

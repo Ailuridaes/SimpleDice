@@ -112,7 +112,6 @@ OnSharedPreferenceChangeListener {
 
     private int rollDice() {
         int total = 0;
-        //TODO: Change to iterate through VISIBLE dice
         for (int i=0; i<mNumDice; i++) {
             total += rollDie(diceViews.get(i));
         }
@@ -122,6 +121,9 @@ OnSharedPreferenceChangeListener {
     private void setNumberDice(int numDice) {
         for (int i=0; i<numDice; i++) {
             ((View)diceViews.get(i).getParent()).setVisibility(View.VISIBLE);
+            if (i%2==0) {
+                ((View)diceViews.get(i).getParent().getParent()).setVisibility(View.VISIBLE);
+            }
         }
         for (int i=numDice; i<diceViews.size(); i++){
             ((View)diceViews.get(i).getParent()).setVisibility(View.GONE);
@@ -135,12 +137,11 @@ OnSharedPreferenceChangeListener {
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key == getString(R.string.settings_number_dice)) {
+        if (key == getString(R.string.key_number_dice)) {
             setNumberDice(mPrefs.getInt(key, getResources()
                     .getInteger(R.integer.default_number_dice)));
         }
 
-        this.recreate();
     }
 
     private void setupPreferences() {
@@ -240,20 +241,8 @@ OnSharedPreferenceChangeListener {
     }
 
     private boolean closeOptions() {
-        FragmentManager fml = mLogFragLeft.getFragmentManager();
-        FragmentManager fmr = mLogFragRight.getFragmentManager();
-
-        // Check if settings are showing, if they are just pop it off
-        if (fmr != null
-                && mLogFragRight.getFragmentManager().getBackStackEntryCount() > 0) {
-            mLogFragRight.getFragmentManager().popBackStack();
-            return true;
-        }
-        if (fml != null
-                && mLogFragLeft.getFragmentManager().getBackStackEntryCount() > 0) {
-            mLogFragLeft.getFragmentManager().popBackStack();
-            return true;
-        }
+        //this.recreate();
+        //In SimpleLife, this method pops back the stack if user has navigated within SlidingMenu
         return false;
     }
 
