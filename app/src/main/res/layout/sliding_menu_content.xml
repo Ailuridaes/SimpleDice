@@ -29,7 +29,6 @@
             android:id="@+id/settings_number_dice_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_toRightOf="@id/settings_number_dice_text"/>
     </RelativeLayout>
 

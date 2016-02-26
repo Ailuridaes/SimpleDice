@@ -15,7 +15,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.sliding_menu_frame, null);
+        return inflater.inflate(R.layout.sliding_menu_content, null);
     }
 
     @Override
@@ -44,20 +44,13 @@ public class SettingsFragment extends Fragment {
         });
 
 
-        /*
-        numDicePicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
-            @Override
-            public void onScrollStateChange(NumberPicker view, int scrollState) {
-
-                if(scrollState== NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
-                    mPrefs.edit().putInt(getString(R.string.key_number_dice), view.getValue())
-                            .apply();
-                }
-            }
-        });
-        */
-
     }
 
-
+    /*
+    @Override
+    public void onResume() {
+        numDicePicker.setValue(mPrefs.getInt(getString(R.string.key_number_dice), getResources()
+                .getInteger(R.integer.default_number_dice)));
+    }
+    */
 }

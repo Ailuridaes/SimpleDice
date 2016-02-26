@@ -190,12 +190,26 @@ OnSharedPreferenceChangeListener {
         menu.setShadowWidthRes(R.dimen.sliding_menu_shadow_width);
         menu.setSecondaryShadowDrawable(R.drawable.sliding_menu_shadow_right);
         */
+
+        /*
         menu.setOnClosedListener(new OnClosedListener() {
             @Override
             public void onClosed() {
                 closeOptions();
             }
         });
+        */
+
+        menu.setOnOpenListener(new SlidingMenu.OnOpenListener() {
+            @Override
+            public void onOpen() {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(this.getId(), new SettingsFragment(),
+                                this.getTag() + "_OPTIONS").addToBackStack(null)
+                        .commit();
+            }
+        });
+
 
         Fragment optionsLeft = getFragmentManager().findFragmentByTag(
                 "LEFT_OPTIONS");
