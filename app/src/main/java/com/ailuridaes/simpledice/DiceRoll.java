@@ -1,24 +1,21 @@
 package com.ailuridaes.simpledice;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.*;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnClosedListener;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import com.github.tbouron.shakedetector.library.ShakeDetector;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,7 +89,7 @@ OnSharedPreferenceChangeListener {
             }
         });
 
-        ShakeDetector.updateConfiguration(1.75f, 3);
+        ShakeDetector.updateConfiguration(1.5f, 3);
 
         // Make sliding menu fragments
         setBehindContentView(R.layout.sliding_menu_frame);
@@ -120,17 +117,18 @@ OnSharedPreferenceChangeListener {
 
     private void setNumberDice(int numDice) {
         for (int i=0; i<numDice; i++) {
-            ((View)diceViews.get(i).getParent()).setVisibility(View.VISIBLE);
+            diceViews.get(i).setVisibility(View.VISIBLE);
             if (i%2==0) {
-                ((View)diceViews.get(i).getParent().getParent()).setVisibility(View.VISIBLE);
+                ((View)diceViews.get(i).getParent()).setVisibility(View.VISIBLE);
             }
         }
         for (int i=numDice; i<diceViews.size(); i++){
-            ((View)diceViews.get(i).getParent()).setVisibility(View.GONE);
+            diceViews.get(i).setVisibility(View.GONE);
             if (i%2==0) {
-                ((View)diceViews.get(i).getParent().getParent()).setVisibility(View.GONE);
+                ((View)diceViews.get(i).getParent()).setVisibility(View.GONE);
             }
         }
+
         mNumDice = numDice;
     }
 
